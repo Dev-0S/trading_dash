@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Trading Dashboard</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #0b1d36;
+            color: #e0e6ed;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 2rem;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ffffff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #132c4c;
+            border: 1px solid #1f3b60;
+            box-shadow: 0 0 12px rgba(0,0,0,0.3);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid #1f3b60;
+        }
+
+        th {
+            background-color: #1e3c61;
+            color: #a8c1e6;
+        }
+
+        tr:nth-child(even) {
+            background-color: #0f2642;
+        }
+
+        .positive {
+            color: #4ef58c;
+        }
+
+        .negative {
+            color: #ff4b5c;
+        }
+
+        .neutral {
+            color: #ccc;
+        }
+
+        .muted {
+            color: #aaa;
+        }
+
+        .no-data {
+            background-color: #193857;
+            padding: 1rem;
+            border: 1px solid #1f3b60;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>📈 Trading Positions</h1>
+
+    {% if positions %}
+    <table>
+        <thead>
+            <tr>
+                <th>Ticker</th>
+                <th>Avg. Price</th>
+                <th>Current Price</th>
+                <th>Quantity</th>
+                <th>PnL</th>
+                <th>FX PnL</th>
+                <th>Initial Fill</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pos in positions %}
+            <tr>
+                <td>{{ pos.ticker }}</td>
+                <td>${{ pos.averagePrice }}</td>
+                <td>${{ pos.currentPrice }}</td>
+                <td>{{ pos.quantity }}</td>
+                <td class="{% if pos.ppl > 0 %}positive{% elif pos.ppl < 0 %}negative{% else %}neutral{% endif %}">
+                    ${{ pos.ppl }}
+                </td>
+                <td class="muted">${{ pos.fxPpl }}</td>
+                <td>{{ pos.initialFillDate|cut:"T"|cut:"Z"|slice:":16" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <div class="no-data">No positions found.</div>
+    {% endif %}
+
+</body>
+</html>
